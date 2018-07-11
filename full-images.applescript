@@ -14,7 +14,7 @@ set Safari to false
 set SafariTP to false
 set Firefox to false
 
-tell application "Safari" to activate
+--tell application "Safari" to activate
 
 tell application "System Events" to set app_name to name of the first process whose frontmost is true
 
@@ -73,10 +73,12 @@ else if urlImage contains "thumbor" then -- Vox
 else if urlImage contains "x0w" then -- App Store
 	set AppleScript's text item delimiters to "x0w"
 	set urlImageFull to text item 1 of urlImage & "00x0w" & text item 2 of urlImage
+else if my isWordPress(urlImage) is not false then -- WordPress
+	set AppleScript's text item delimiters to my isWordPress(urlImage)
+	set urlImageFull to text item 1 of urlImage & text item 2 of urlImage
 else
 	return
 end if
-
 
 if my verifImageFull(urlImageFull) is not false then
 	my openInBrowser(urlImageFull)
@@ -124,3 +126,10 @@ on openInBrowser(urlImage)
 	end if
 end openInBrowser
 
+on isWordPress(imageURL)
+	try
+		return do shell script "echo " & quoted form of imageURL & " | grep -o '\\-[0-9]\\+x[0-9]\\+'"
+	on error
+		return false
+	end try
+end isWordPress
