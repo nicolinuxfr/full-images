@@ -67,12 +67,20 @@ if urlImage contains ".jpg?" then
 else if urlImage contains "/w_" then -- Wired
 	set AppleScript's text item delimiters to ",c"
 	set urlImageFull to text item 1 of urlImage & "00,c" & text item 2 of urlImage
+else if urlImage contains ".medium" then -- cloudfront
+	set AppleScript's text item delimiters to ".medium"
+	set urlImageFull to text item 1 of urlImage
 else if urlImage contains "thumbor" then -- Vox
 	set AppleScript's text item delimiters to "/cdn"
 	set urlImageFull to "https://cdn" & last text item of urlImage
 else if urlImage contains "x0w" then -- App Store
 	set AppleScript's text item delimiters to "x0w"
 	set urlImageFull to text item 1 of urlImage & "00x0w" & text item 2 of urlImage
+else if urlImage contains "cdn-apple.com" then -- Apple Store
+	set AppleScript's text item delimiters to "wid="
+	set temp to text item 1 of urlImage & "wid=3000&hei=3000&fmt"
+	set AppleScript's text item delimiters to "&fmt"
+	set urlImageFull to temp & text item 2 of urlImage
 else if my isWordPress(urlImage) is not false then -- WordPress
 	set AppleScript's text item delimiters to my isWordPress(urlImage)
 	set urlImageFull to text item 1 of urlImage & text item 2 of urlImage
