@@ -89,8 +89,8 @@ end if
 -- Does the guessed image lead to a 404 or not ?
 on verifImageFull(urlImage)
 	try
-		set codeImageFull to do shell script "curl -s -L -o /dev/null -w \"%{http_code}\" " & (quoted form of urlImage)
-		if codeImageFull is "404" then
+		set codeImageFull to do shell script "curl -s -L -o /dev/null -I -w \"%{http_code}\" " & (quoted form of urlImage)
+		if codeImageFull does not begin with "20" then
 			return false
 		else
 			return urlImage
