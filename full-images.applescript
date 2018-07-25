@@ -64,6 +64,9 @@ set urlImageFull to false
 if urlImage contains ".jpg?" then
 	set AppleScript's text item delimiters to ".jpg?"
 	set urlImageFull to text item 1 of urlImage & ".jpg"
+else if urlImage contains ".png?" then
+	set AppleScript's text item delimiters to ".png?"
+	set urlImageFull to text item 1 of urlImage & ".png"
 else if urlImage contains "/w_" then -- Wired
 	set AppleScript's text item delimiters to ",c"
 	set urlImageFull to text item 1 of urlImage & "00,c" & text item 2 of urlImage
