@@ -91,7 +91,18 @@ else if my isWordPress(urlImage) is not false then -- WordPress
 	set AppleScript's text item delimiters to my isWordPress(urlImage)
 	set urlImageFull to text item 1 of urlImage & text item 2 of urlImage
 else
-	return
+	set AppleScript's text item delimiters to ".png"
+	set temp to text item 1 of urlImage & "@2x.png"
+	if my verifImageFull(temp) is not false then 
+		set urlImageFull to temp
+	else
+		set temp to text item 1 of urlImage & "_2x.png"
+		if my verifImageFull(temp) is not false then 
+			set urlImageFull to temp
+		else
+			return
+		end if
+	end if
 end if
 
 if my verifImageFull(urlImageFull) is not false then
