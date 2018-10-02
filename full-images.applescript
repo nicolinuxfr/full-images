@@ -61,7 +61,10 @@ end if
 
 set urlImageFull to false
 
-if urlImage contains ".jpg?" then
+if urlImage contains "?format=" then -- Squarespace
+	set AppleScript's text item delimiters to "0w"
+	set urlImageFull to text item 1 of urlImage & "00w" & text item 2 of urlImage
+else if urlImage contains ".jpg?" then
 	set AppleScript's text item delimiters to ".jpg?"
 	set urlImageFull to text item 1 of urlImage & ".jpg"
 else if urlImage contains ".png?" then
@@ -73,9 +76,17 @@ else if urlImage contains ".jpeg?" then
 else if urlImage contains "/w_" then -- Wired
 	set AppleScript's text item delimiters to ",c"
 	set urlImageFull to text item 1 of urlImage & "00,c" & text item 2 of urlImage
-else if urlImage contains ".medium" then -- cloudfront
+else if urlImage contains ".medium" and urlImage does not contain ".medium.com" then -- cloudfront
 	set AppleScript's text item delimiters to ".medium"
 	set urlImageFull to text item 1 of urlImage
+else if urlImage contains ".medium.com/" then -- Medium
+	set AppleScript's text item delimiters to "/max/"
+	set urlImageFull to text item 1 of urlImage & "/max/10000/"
+	set AppleScript's text item delimiters to "/"
+ 	set urlImageFull to urlImageFull & last text item of urlImage
+else if urlImage contains "cloudfront.net" and urlImage contains "?url=" then
+	set AppleScript's text item delimiters to "?url="
+	set urlImageFull to my urlDecode(text item 2 of urlImage)
 else if urlImage contains "thumbor" then -- Vox
 	set AppleScript's text item delimiters to "/cdn"
 	set urlImageFull to "https://cdn" & last text item of urlImage
@@ -158,3 +169,9 @@ on isWordPress(imageURL)
 		return false
 	end try
 end isWordPress
+
+
+on urlDecode(imageURL)
+	set imageURL to do shell script "php -r 'echo urldecode(\"" & imageURL & "\");'"
+	return imageURL
+end urlDecode
